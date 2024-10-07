@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<math.h>
+#include<ctype.h>
+
+#define MAX 100
+
+int top=-1;
+int stack[MAX];
+void push(int value)
+{
+    if(top<MAX-1)
+    {
+        stack[++top]=value;
+    }
+    else{
+        printf("stack overflow\n");
+    }
+}
+int pop()
+{
+    if(top>=0)
+    {
+        return stack[top--];
+    }
+    else{
+        printf("stack underflow\n");
+        return -1;
+    }
+}
+int apply_operator(char operator,char a,char b)
+{
+    switch(operator)
+    {
+        case '+' : return a+b;
+        case '-' : return a-b;
+        case '*' : return a*b;
+        case '/' : return a/b;
+        case '^' : return (int)pow(a,b);
+        default : return 0;
+    }
+}
+
+int result_evalution(char expression [])
+{
+    int i=0;
+    int variable[26]={0};
+    while(expression[i]!='\0')
+    {
+        char ch=expression[i];
+        if(isdigit(ch))
+        {
+            push(ch-'\0');
+        }
+        else if(isalpha(ch))
+        {
+            int index=ch-'a';
+            if(variable[index]==0)
+            {
+                printf("Enter the value of %c \n",ch);
+                scanf("%d",&variable[index]);
+            }
+            push(variable[index]);
+        }
+        else if(ch=='+'||ch=='-'||ch=='*'||ch=='/'||ch=='^')
+        {
+            int b=pop();
+            int a=pop();
+             int result=apply_operator(ch,a,b);
+            push(result);
+
+        }
+        i++;
+    }
+    return pop();
+
+
+}
+
+int main()
+{
+    printf("Enter the expression\n");
+    char expression[MAX];
+    scanf("%s",expression);
+    int result=result_evalution(expression);
+    printf("the following result is : %d\n",result);
+
+
+}
